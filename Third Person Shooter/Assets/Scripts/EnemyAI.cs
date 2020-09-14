@@ -24,6 +24,8 @@ public class EnemyAI : MonoBehaviour
     private HealthSystem _playerHealth;
     private float _delayAttack = 1.5f; // giving the player a chance to escape
     private float _nextAttack = -1;
+    private float turnSmoothTime = 0.1f;
+    private float turnSmoothVelocity;
 
     void Start()
     {
@@ -60,7 +62,9 @@ public class EnemyAI : MonoBehaviour
             Vector3 direction = _player.position - transform.position; // ai will follow player
             direction.Normalize();
             direction.y = 0;
-            transform.localRotation = Quaternion.LookRotation(direction); // TODO: smooth rotation
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.localRotation = Quaternion.Euler(0f, angle, 0f); // smooth rotation
             _velocity = direction * _speed;
         }
 
