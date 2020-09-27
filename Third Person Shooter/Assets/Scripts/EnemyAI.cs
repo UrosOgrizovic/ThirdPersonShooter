@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class EnemyAI : MonoBehaviour
     private Transform _player;
 
     [SerializeField]
-    private float _speed = 3f;
+    public float _speed = 5f;
 
     private Vector3 _velocity;
     private float _gravity = 20f;
@@ -19,13 +20,14 @@ public class EnemyAI : MonoBehaviour
     }
 
     [SerializeField]
-    private EnemyState _currentState = EnemyState.Chase;
+    public EnemyState _currentState = EnemyState.Chase;
 
     private HealthSystem _playerHealth;
     private float _delayAttack = 1.5f; // giving the player a chance to escape
     private float _nextAttack = -1;
     private float turnSmoothTime = 0.1f;
     private float turnSmoothVelocity;
+
 
     void Start()
     {
@@ -65,6 +67,7 @@ public class EnemyAI : MonoBehaviour
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.localRotation = Quaternion.Euler(0f, angle, 0f); // smooth rotation
+            
             _velocity = direction * _speed;
         }
 

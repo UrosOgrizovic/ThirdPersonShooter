@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -14,10 +15,16 @@ public class Player : MonoBehaviour
     float _gravity = 20.0f;
     [SerializeField]
     float _camSensitivity = 1.5f;
+    [SerializeField]
+    EnemyAI _enemy;
 
     private Vector3 _direction;
 
     private Camera _mainCamera;
+
+    public bool bulletTime;
+    Light _light;
+    Text _bulletTimeText;
 
     void Start()
     {
@@ -25,6 +32,10 @@ public class Player : MonoBehaviour
         _mainCamera = Camera.main;
 
         Cursor.lockState = CursorLockMode.Locked;
+        _enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyAI>();
+
+        _bulletTimeText = GameObject.FindGameObjectWithTag("BulletTimeText").GetComponent<Text>();
+        _light = GameObject.FindGameObjectWithTag("Light").GetComponent<Light>();
     }
 
     void Update()
@@ -35,6 +46,28 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            bulletTime = !bulletTime;
+            float speedToSet = 5f;
+            if (bulletTime)
+            {
+                speedToSet = 1f;
+                _light.color = Color.green;
+                _bulletTimeText.text = "Bullet time";
+            }
+            else
+            {
+                _light.color = Color.white;
+                _bulletTimeText.text = "";
+            }
+            if (_enemy != null)
+            {
+                _enemy._speed = speedToSet;
+            }
+            Debug.Log("Speed = " + _speed);
+            
         }
         
     }
